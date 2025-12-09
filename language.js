@@ -11,7 +11,6 @@ const translations = {
         
         // Header
         headerTitle: "Megabre Compare",
-        infoButton: "Bilgi",
         darkMode: "Karanlık Mod",
         lightMode: "Açık Mod",
         
@@ -21,6 +20,8 @@ const translations = {
         clear: "Temizle",
         toLowercase: "Küçük Harfe Çevir",
         removeSpaces: "Boşlukları Temizle",
+        editorOpen: "Editörü Aç",
+        editorClose: "Editörü Kapat",
         
         // Buttons
         compare: "Karşılaştır",
@@ -80,7 +81,6 @@ const translations = {
         
         // Header
         headerTitle: "Megabre Compare",
-        infoButton: "Info",
         darkMode: "Dark Mode",
         lightMode: "Light Mode",
         
@@ -90,6 +90,8 @@ const translations = {
         clear: "Clear",
         toLowercase: "Convert to Lowercase",
         removeSpaces: "Remove Spaces",
+        editorOpen: "Open Editor",
+        editorClose: "Close Editor",
         
         // Buttons
         compare: "Compare",
@@ -149,7 +151,6 @@ const translations = {
         
         // Header
         headerTitle: "Megabre Compare",
-        infoButton: "Info",
         darkMode: "Modo Oscuro",
         lightMode: "Modo Claro",
         
@@ -159,6 +160,8 @@ const translations = {
         clear: "Limpiar",
         toLowercase: "Convertir a Minúsculas",
         removeSpaces: "Eliminar Espacios",
+        editorOpen: "Abrir Editor",
+        editorClose: "Cerrar Editor",
         
         // Buttons
         compare: "Comparar",
@@ -250,7 +253,7 @@ function applyLanguage(lang) {
     // Update header
     const titleElement = document.querySelector(".title");
     if (titleElement) {
-        titleElement.innerHTML = `${t.headerTitle} -> <button id='infoButton' class='info-button'>${t.infoButton}</button>`;
+        titleElement.innerHTML = `${t.headerTitle} -> <a href="https://github.com/Megabre/compare" target="_blank" class="github-link" title="GitHub'da Görüntüle"><i class="fab fa-github"></i> GitHub</a>`;
     }
     
     // Mode button will be updated by updateModeButtonText() function in app.js
@@ -271,6 +274,26 @@ function applyLanguage(lang) {
         clearButtons[4].innerText = t.toLowercase;
         clearButtons[5].innerText = t.removeSpaces;
     }
+    
+    // Update editor toggle buttons
+    const editorToggleButtons = document.querySelectorAll('.toggle-editor .editor-toggle-text');
+    editorToggleButtons.forEach(function(btn) {
+        if (btn && typeof window.editorStates !== 'undefined') {
+            // Editör durumuna göre metni güncelle
+            const toggleBtn = btn.closest('.toggle-editor');
+            if (toggleBtn) {
+                const inputId = toggleBtn.getAttribute('data-target');
+                if (window.editorStates && window.editorStates[inputId]) {
+                    btn.textContent = t.editorClose;
+                } else {
+                    btn.textContent = t.editorOpen;
+                }
+            }
+        } else if (btn) {
+            // İlk yüklemede varsayılan olarak "Aç" göster
+            btn.textContent = t.editorOpen;
+        }
+    });
     
     // Update main buttons
     const compareButton = document.getElementById("compareBtn");
