@@ -25,90 +25,66 @@
     <meta name="twitter:label2" content="Tahmini okuma süresi">
     <meta name="twitter:data2" content="14 dakika">
 
-    <link rel="stylesheet" href="style.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Tabler.io CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/core@latest/dist/css/tabler.min.css" rel="stylesheet">
+    
+    <!-- Summernote CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    
+    <!-- Summernote JS -->
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
+    
+    <!-- Language System -->
     <script src="language.js"></script>
 </head>
 <body>
     <div class="header">
-        <h1 class="title">Megabre Compare -> <button id="infoButton" class="info-button">Info</button></h1>
+        <h1 class="title">Megabre Compare -> <a href="https://github.com/Megabre/compare" target="_blank" class="github-link" title="GitHub'da Görüntüle"><i class="fab fa-github"></i> GitHub</a></h1>
         <button id="toggleMode" class="mode-toggle">Dark Mode</button>
-    </div>
-
-    <!-- Modal -->
-    <div id="infoModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Megabre Compare Hakkında</h2>
-            <p>
-                Bu sistem, iki farklı metni satır satır karşılaştırarak farklılıkları görsel olarak vurgulamak amacıyla geliştirilmiştir. Megabre Compare, özellikle uzun ve karmaşık dokümanlarda küçük farklılıkları hızlıca bulmak için ideal bir çözümdür.
-            </p>
-            <h3>Ana Özellikler</h3>
-            <ul>
-                <li><strong>İki metni karşılaştırma ve farkları vurgulama:</strong> Metinlerinizi satır satır karşılaştırarak hangi satırların farklı olduğunu ve hangi kelimelerde değişiklikler olduğunu görsel olarak fark edebilirsiniz. Farklı olan satırların arka planı vurgulanır ve farklı kelimeler kırmızı renkle gösterilir.</li>
-                <li><strong>"Atla Göster" Butonu:</strong> Bu özellik, farklı olan satırlara hızlıca atlamanızı sağlar. Sistem, tüm metinleri tarar ve farklılık bulduğu satırlara kolayca ulaşmanızı sağlar.</li>
-                <li><strong>"Sadece Farkları Göster" Butonu:</strong> Bu işlev, yalnızca iki metin arasında farklı olan satırları görüntüler. Tekrar tıklayarak tüm metni geri yükleyebilirsiniz.</li>
-                <li><strong>Dark/Light Mode Desteği:</strong> Sistemin görünümünü Dark Mode veya Light Mode'a çevirebilirsiniz. Kullanıcıya daha rahat bir kullanım deneyimi sunar.</li>
-                <li><strong>Metin temizleme ve düzenleme işlevleri:</strong> Sistemde ayrıca metinlerinizi temizleyebilir, küçük harfe çevirebilir ve gereksiz boşlukları kaldırabilirsiniz.</li>
-            </ul>
-
-            <h3>Kullanım Alanları</h3>
-            <p>
-                Megabre Compare, özellikle aşağıdaki senaryolar için idealdir:
-            </p>
-            <ul>
-                <li><strong>Büyük Dokümanları Karşılaştırma:</strong> Özellikle büyük ve kompleks dokümanlar üzerinde çalışırken, iki sürüm arasındaki farkları bulmak için kullanılır.</li>
-                <li><strong>Kod Karşılaştırması:</strong> İki farklı kod sürümü arasındaki değişiklikleri tespit edebilir, bu sayede geliştirme süreçlerinde zaman kazanabilirsiniz.</li>
-                <li><strong>Rapor ve Belgeler:</strong> Birden fazla versiyona sahip metinlerde, hangi satırlarda değişiklikler olduğunu görüp düzenlemeleri hızlıca yapabilirsiniz.</li>
-            </ul>
-
-            <h3>Nasıl Kullanılır?</h3>
-            <p>
-                Sistemi kullanmak oldukça basittir. İşte adım adım kullanım rehberi:
-            </p>
-            <ol>
-                <li>Karşılaştırmak istediğiniz iki metni giriş alanlarına yazın veya yapıştırın.</li>
-                <li>"Karşılaştır" butonuna tıklayın. Sistem, metinleri satır satır karşılaştırarak hangi satırların farklı olduğunu size gösterecek.</li>
-                <li>"Atla Göster" butonunu kullanarak, farklı satırlara hızlıca atlayabilirsiniz.</li>
-                <li>Eğer sadece farklı olan satırları görmek istiyorsanız, "Sadece Farkları Göster" butonuna tıklayabilirsiniz. Bu buton, sadece iki metin arasındaki farklı satırları gösterecek, tekrar tıkladığınızda tüm metin geri yüklenecektir.</li>
-                <li>Işığa duyarlı bir kullanım için, sağ üst köşedeki "Dark Mode" butonunu kullanarak görünüm modunu değiştirebilirsiniz.</li>
-                <li>Metinleri temizlemek, küçük harfe çevirmek veya gereksiz boşlukları kaldırmak için ilgili fonksiyon butonlarını kullanabilirsiniz.</li>
-            </ol>
-
-            <h3>Teknik Detaylar ve Güvenlik</h3>
-            <p>
-                Sistem, kullanıcı dostu bir arayüzle iki metni satır satır karşılaştırmak üzerine kurulmuştur. Güvenlik açısından, kullanıcı girdileri XSS (Cross-Site Scripting) saldırılarına karşı korunmaktadır. Metinler ekrana yazdırılmadan önce özel olarak kaçış karakterleri ile temizlenir, böylece kötü niyetli kod çalıştırma girişimlerine karşı güvenlik sağlanır.
-            </p>
-            <p>
-                Metin girişlerinde belirli sınırlamalar bulunur, kullanıcı başına maksimum 5000 satır ve yaklaşık 100.000 karakter ile sınırlıdır. Bu limitler, performans sorunlarını ve kötüye kullanımı önlemeye yardımcı olur.
-            </p>
-            <p>
-                Sunucuya yönelik herhangi bir yük oluşturulmamakta, tüm işlemler tarayıcı üzerinde gerçekleştirilmekte ve böylece verileriniz sunuculara gönderilmeden tamamen gizli kalmaktadır.
-            </p>
-
-            <h3>Sonuç</h3>
-            <p>
-                Megabre Compare, uzun metinler ve dokümanlar arasında hızlı, verimli ve güvenli bir şekilde karşılaştırma yapmak için tasarlanmıştır. Özellikle büyük dokümanlarla çalışanlar için farklılıkları bulmak ve düzenlemeleri hızlandırmak amacıyla önemli bir aracınızdır. Sistemin sunduğu kullanıcı dostu özellikler sayesinde metinler arasında hataları bulmak artık çok daha kolay ve hızlı.
-            </p>
-
-        </div>
     </div>
 
 <div class="text-inputs">
         <div class="input-container">
+            <div class="editor-controls">
+                <button type="button" class="btn btn-sm btn-info toggle-editor" data-target="input1" title="Editörü Aç/Kapat">
+                    <i class="fas fa-edit"></i> <span class="editor-toggle-text">Editörü Aç</span>
+                </button>
+            </div>
+            <div id="summernote1" style="display: none;"></div>
             <textarea id="input1" placeholder="İlk metni giriniz"></textarea>
             <div class="function-buttons">
-                <button onclick="clearText('input1')">Temizle</button>
-                <button onclick="convertToLower('input1')">Küçük Harfe Çevir</button>
-                <button onclick="removeSpaces('input1')">Boşlukları Temizle</button>
+                <button class="btn btn-sm btn-default" onclick="clearText('input1')">Temizle</button>
+                <button class="btn btn-sm btn-default" onclick="convertToLower('input1')">Küçük Harfe Çevir</button>
+                <button class="btn btn-sm btn-default" onclick="removeSpaces('input1')">Boşlukları Temizle</button>
             </div>
         </div>
         <div class="input-container">
+            <div class="editor-controls">
+                <button type="button" class="btn btn-sm btn-info toggle-editor" data-target="input2" title="Editörü Aç/Kapat">
+                    <i class="fas fa-edit"></i> <span class="editor-toggle-text">Editörü Aç</span>
+                </button>
+            </div>
+            <div id="summernote2" style="display: none;"></div>
             <textarea id="input2" placeholder="Karşılaştırılacak metni giriniz"></textarea>
             <div class="function-buttons">
-                <button onclick="clearText('input2')">Temizle</button>
-                <button onclick="convertToLower('input2')">Küçük Harfe Çevir</button>
-                <button onclick="removeSpaces('input2')">Boşlukları Temizle</button>
+                <button class="btn btn-sm btn-default" onclick="clearText('input2')">Temizle</button>
+                <button class="btn btn-sm btn-default" onclick="convertToLower('input2')">Küçük Harfe Çevir</button>
+                <button class="btn btn-sm btn-default" onclick="removeSpaces('input2')">Boşlukları Temizle</button>
             </div>
         </div>
     </div>
