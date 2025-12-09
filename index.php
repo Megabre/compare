@@ -26,106 +26,8 @@
     <meta name="twitter:data2" content="14 dakika">
 
     <link rel="stylesheet" href="style.css">
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Tarayıcı dilini kontrol et
-            const userLang = navigator.language || navigator.userLanguage;
-
-            // Eğer tarayıcı dili Türkçe değilse, içerik İngilizce'ye çevrilecek
-            if (userLang !== "tr" && !userLang.startsWith("tr")) {
-                translateToEnglish();
-            }
-        });
-
-        function translateToEnglish() {
-            // HTML 'lang' özniteliğini güncelle
-            document.documentElement.lang = "en";
-
-            // Meta verileri güncelle
-            document.querySelector('meta[name="description"]').setAttribute('content', 'Text comparison and difference finding tool.');
-            document.querySelector('meta[property="og:title"]').setAttribute('content', 'Text Comparison and Difference Finder Tool.');
-            document.querySelector('meta[property="og:description"]').setAttribute('content', 'Text comparison and difference finding tool.');
-
-            // Başlık ve butonları güncelle
-            const titleElement = document.querySelector(".title");
-            if (titleElement) {
-                titleElement.innerHTML = "Megabre Compare -> <button id='infoButton' class='info-button'>Info</button>";
-            }
-
-            const toggleModeButton = document.getElementById("toggleMode");
-            if (toggleModeButton) {
-                toggleModeButton.innerText = "Dark Mode";
-            }
-
-            // Modal içeriğini güncelle
-            const modalTitle = document.querySelector(".modal-content h2");
-            if (modalTitle) {
-                modalTitle.innerText = "About Megabre Compare";
-            }
-
-            const modalParagraph = document.querySelector(".modal-content p");
-            if (modalParagraph) {
-                modalParagraph.innerText = "This system is designed to compare two different texts line by line and highlight the differences visually. Megabre Compare is ideal for quickly finding small differences, especially in long and complex documents.";
-            }
-
-            const features = document.querySelectorAll(".modal-content ul li");
-            if (features.length > 0) {
-                features[0].innerHTML = "<strong>Compare and highlight differences between two texts:</strong> You can visually notice which lines are different and which words have changed by comparing your texts line by line. The background of different lines is highlighted, and different words are shown in red.";
-                features[1].innerHTML = "<strong>'Skip to Show' Button:</strong> This feature allows you to quickly jump to the different lines. The system scans all texts and allows you to easily access the lines where it finds differences.";
-                features[2].innerHTML = "<strong>'Show Only Differences' Button:</strong> This function only displays the lines that are different between the two texts. You can reload the full text by clicking again.";
-                features[3].innerHTML = "<strong>Dark/Light Mode Support:</strong> You can switch the system view to Dark Mode or Light Mode. It provides a more comfortable user experience.";
-                features[4].innerHTML = "<strong>Text cleaning and editing functions:</strong> You can also clean your texts, convert them to lowercase, and remove unnecessary spaces in the system.";
-            }
-
-            // Diğer başlıklar ve açıklamaları güncelle
-            const headings = document.querySelectorAll(".modal-content h3");
-            if (headings.length > 0) {
-                headings[0].innerText = "Main Features";
-                headings[1].innerText = "Use Cases";
-                headings[2].innerText = "How to Use?";
-                headings[3].innerText = "Technical Details and Security";
-                headings[4].innerText = "Conclusion";
-            }
-
-            const useCases = document.querySelectorAll(".modal-content ul")[1]?.children;
-            if (useCases) {
-                useCases[0].innerHTML = "<strong>Comparing Large Documents:</strong> Used to find differences between two versions, especially when working with large and complex documents.";
-                useCases[1].innerHTML = "<strong>Code Comparison:</strong> Can detect changes between two different versions of code, saving you time during development processes.";
-                useCases[2].innerHTML = "<strong>Reports and Documents:</strong> You can quickly make changes by seeing which lines have changed in texts with multiple versions.";
-            }
-
-            const howToUse = document.querySelectorAll(".modal-content ol")[0]?.children;
-            if (howToUse) {
-                howToUse[0].innerText = "Enter or paste the two texts you want to compare into the input fields.";
-                howToUse[1].innerText = "Click the 'Compare' button. The system will compare the texts line by line and show you which lines are different.";
-                howToUse[2].innerText = "Use the 'Skip to Show' button to quickly jump to different lines.";
-                howToUse[3].innerText = "If you only want to see the different lines, click the 'Show Only Differences' button. This button will only show the different lines between the two texts. Clicking again will reload the full text.";
-                howToUse[4].innerText = "For a light-sensitive usage, change the view mode using the 'Dark Mode' button at the top right corner.";
-                howToUse[5].innerText = "Use the function buttons to clear texts, convert to lowercase, or remove unnecessary spaces.";
-            }
-
-            // Buton ve diğer öğeleri güncelle
-            const compareButton = document.getElementById("compareBtn");
-            if (compareButton) {
-                compareButton.innerText = "Compare";
-            }
-
-            const skipButton = document.getElementById("skipButton");
-            if (skipButton) {
-                skipButton.innerText = "Skip Line / Show Differences";
-            }
-
-            const showDifferencesButton = document.getElementById("showDifferencesButton");
-            if (showDifferencesButton) {
-                showDifferencesButton.innerText = "Show Only Differences";
-            }
-
-            const warningMessage = document.getElementById("warningMessage");
-            if (warningMessage) {
-                warningMessage.innerText = "Maximum line limit of 5000 exceeded. Excess lines were not processed.";
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="language.js"></script>
 </head>
 <body>
     <div class="header">
@@ -225,6 +127,30 @@
     </div>
 
     <div id="warningMessage" style="display: none; color: red;">Maksimum 5000 satır sınırı aşıldı. Fazla satırlar işlenmedi.</div>
+
+    <!-- Floating Language Dropdown -->
+    <div class="floating-language">
+        <div class="language-dropdown">
+            <button class="language-dropdown-btn" onclick="toggleLanguageDropdown()" title="Dil Seçimi">
+                <img src="../img/flags/tr.svg" alt="Türkçe" id="currentFlag">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="language-dropdown-menu" id="languageDropdown">
+                <a href="#" onclick="changeLanguage('tr'); return false;" data-lang="tr" class="language-option active">
+                    <img src="../img/flags/tr.svg" alt="Türkçe">
+                    <span>Türkçe</span>
+                </a>
+                <a href="#" onclick="changeLanguage('en'); return false;" data-lang="en" class="language-option">
+                    <img src="../img/flags/en.svg" alt="English">
+                    <span>English</span>
+                </a>
+                <a href="#" onclick="changeLanguage('es'); return false;" data-lang="es" class="language-option">
+                    <img src="../img/flags/es.svg" alt="Español">
+                    <span>Español</span>
+                </a>
+            </div>
+        </div>
+    </div>
 
     <script src="app.js"></script>
 </body>
