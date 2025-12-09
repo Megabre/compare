@@ -53,6 +53,10 @@ Built with modern web technologies, Megabre Compare runs entirely in your browse
 - **XSS Protection**: Input sanitization prevents malicious code execution
 - **Privacy First**: No tracking, no analytics, no data collection
 
+**🌐 Website Links**:
+- **Product Page**: [https://www.megabre.com/compare-pro.php](https://www.megabre.com/compare-pro.php)
+- **Free Software Page**: [https://www.megabre.com/free-software.php](https://www.megabre.com/free-software.php)
+
 ## 🚀 Installation
 
 ### Option 1: Direct Download
