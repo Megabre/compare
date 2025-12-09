@@ -1,7 +1,26 @@
 // Karşılaştırma Butonu
-document.getElementById('compareBtn').addEventListener('click', function() {
-    const text1 = document.getElementById('input1').value;
-    const text2 = document.getElementById('input2').value;
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('compareBtn').addEventListener('click', function() {
+        // Summernote açıksa içeriği al, değilse textarea'dan al
+        let text1, text2;
+        
+        if (editorStates.input1) {
+            const summernoteContent = $('#summernote1').summernote('code');
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = summernoteContent;
+            text1 = tempDiv.textContent || tempDiv.innerText || '';
+        } else {
+            text1 = document.getElementById('input1').value;
+        }
+        
+        if (editorStates.input2) {
+            const summernoteContent = $('#summernote2').summernote('code');
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = summernoteContent;
+            text2 = tempDiv.textContent || tempDiv.innerText || '';
+        } else {
+            text2 = document.getElementById('input2').value;
+        }
 
     // Metin uzunluğunu kontrol et
     if (text1.length > 100000 || text2.length > 100000) {
@@ -47,19 +66,25 @@ document.getElementById('compareBtn').addEventListener('click', function() {
     document.getElementById('result1').innerHTML = result1;
     document.getElementById('result2').innerHTML = result2;
 
-    // Atla Göster Butonunu Görüntüle
-    if (differentLines.length > 0) {
-        document.getElementById('result-controls').style.display = 'block';
-        setupSkipButton(differentLines);
-    } else {
-        document.getElementById('result-controls').style.display = 'none';
-    }
+        // Atla Göster Butonunu Görüntüle
+        if (differentLines.length > 0) {
+            document.getElementById('result-controls').style.display = 'block';
+            setupSkipButton(differentLines);
+        } else {
+            document.getElementById('result-controls').style.display = 'none';
+        }
+    });
 });
 
 // Dark/Light Mode Geçişi
-document.getElementById('toggleMode').addEventListener('click', function() {
-    document.body.classList.toggle('light-mode');
-    updateModeButtonText();
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleModeBtn = document.getElementById('toggleMode');
+    if (toggleModeBtn) {
+        toggleModeBtn.addEventListener('click', function() {
+            document.body.classList.toggle('light-mode');
+            updateModeButtonText();
+        });
+    }
 });
 
 // Update mode button text based on current language
@@ -84,17 +109,57 @@ window.updateModeButtonText = updateModeButtonText;
 
 // Temizleme, Küçük Harfe Çevirme ve Boşluk Temizleme Fonksiyonları
 function clearText(id) {
-    document.getElementById(id).value = '';
+    const textarea = document.getElementById(id);
+    const summernoteDiv = document.getElementById('summernote' + id.slice(-1));
+    
+    if (editorStates[id]) {
+        // Summernote açıksa
+        $(summernoteDiv).summernote('code', '');
+        textarea.value = '';
+    } else {
+        // Textarea açıksa
+        textarea.value = '';
+    }
 }
 
 function convertToLower(id) {
-    let text = document.getElementById(id).value;
-    document.getElementById(id).value = text.toLowerCase();
+    const textarea = document.getElementById(id);
+    const summernoteDiv = document.getElementById('summernote' + id.slice(-1));
+    
+    if (editorStates[id]) {
+        // Summernote açıksa
+        let content = $(summernoteDiv).summernote('code');
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = content;
+        let text = tempDiv.textContent || tempDiv.innerText || '';
+        text = text.toLowerCase();
+        $(summernoteDiv).summernote('code', text);
+        textarea.value = text;
+    } else {
+        // Textarea açıksa
+        let text = textarea.value;
+        textarea.value = text.toLowerCase();
+    }
 }
 
 function removeSpaces(id) {
-    let text = document.getElementById(id).value;
-    document.getElementById(id).value = text.replace(/\s+/g, ' ').trim();
+    const textarea = document.getElementById(id);
+    const summernoteDiv = document.getElementById('summernote' + id.slice(-1));
+    
+    if (editorStates[id]) {
+        // Summernote açıksa
+        let content = $(summernoteDiv).summernote('code');
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = content;
+        let text = tempDiv.textContent || tempDiv.innerText || '';
+        text = text.replace(/\s+/g, ' ').trim();
+        $(summernoteDiv).summernote('code', text);
+        textarea.value = text;
+    } else {
+        // Textarea açıksa
+        let text = textarea.value;
+        textarea.value = text.replace(/\s+/g, ' ').trim();
+    }
 }
 
 // Farklılıkları Kırmızı Renkte Gösterme
@@ -108,27 +173,126 @@ function highlightDifference(text1, text2) {
     }).join(' ');
 }
 
-// Modal ile ilgili işlemler
-var modal = document.getElementById("infoModal");
-var btn = document.getElementById("infoButton");
-var span = document.getElementsByClassName("close")[0];
 
-// Butona tıklandığında modal açılır
-btn.onclick = function() {
-    modal.style.display = "flex";
-}
+// Summernote Editör Yönetimi
+let summernoteInstances = {
+    input1: null,
+    input2: null
+};
 
-// X işaretine tıklandığında modal kapanır
-span.onclick = function() {
-    modal.style.display = "none";
-}
+let editorStates = {
+    input1: false,
+    input2: false
+};
 
-// Modal dışında bir yere tıklandığında modal kapanır
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
+// Make editorStates available globally for language.js
+window.editorStates = editorStates;
+
+// Editör toggle fonksiyonu
+function toggleEditor(inputId) {
+    const textarea = document.getElementById(inputId);
+    const summernoteDiv = document.getElementById('summernote' + inputId.slice(-1));
+    const toggleBtn = document.querySelector(`[data-target="${inputId}"]`);
+    const toggleText = toggleBtn.querySelector('.editor-toggle-text');
+    
+    if (!editorStates[inputId]) {
+        // Editörü aç
+        textarea.style.display = 'none';
+        summernoteDiv.style.display = 'block';
+        
+        // Summernote'u başlat
+        if (!summernoteInstances[inputId]) {
+            $(summernoteDiv).summernote({
+                height: 300,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'italic', 'underline', 'clear']],
+                    ['fontname', ['fontname']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ],
+                callbacks: {
+                    onChange: function(contents, $editable) {
+                        // Summernote içeriğini textarea'ya aktar (HTML'den temizlenmiş)
+                        const textarea = document.getElementById(inputId);
+                        if (textarea) {
+                            // HTML'i düz metne çevir
+                            const tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = contents;
+                            textarea.value = tempDiv.textContent || tempDiv.innerText || '';
+                        }
+                    }
+                }
+            });
+            summernoteInstances[inputId] = true;
+        }
+        
+        // Mevcut textarea içeriğini Summernote'a yükle
+        const currentText = textarea.value;
+        $(summernoteDiv).summernote('code', currentText);
+        
+        editorStates[inputId] = true;
+        
+        // Dil sisteminden metni al
+        const currentLang = localStorage.getItem('megabreCompareLang') || (navigator.language || navigator.userLanguage).substring(0, 2).toLowerCase();
+        if (currentLang === 'tr') {
+            toggleText.textContent = 'Editörü Kapat';
+        } else if (currentLang === 'es') {
+            toggleText.textContent = 'Cerrar Editor';
+        } else {
+            toggleText.textContent = 'Close Editor';
+        }
+        
+        toggleBtn.classList.remove('btn-info');
+        toggleBtn.classList.add('btn-warning');
+    } else {
+        // Editörü kapat
+        const summernoteContent = $(summernoteDiv).summernote('code');
+        
+        // HTML'i düz metne çevir
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = summernoteContent;
+        const plainText = tempDiv.textContent || tempDiv.innerText || '';
+        
+        // Textarea'ya aktar
+        textarea.value = plainText;
+        
+        // Summernote'u yok et
+        $(summernoteDiv).summernote('destroy');
+        summernoteInstances[inputId] = null;
+        
+        textarea.style.display = 'block';
+        summernoteDiv.style.display = 'none';
+        
+        editorStates[inputId] = false;
+        
+        // Dil sisteminden metni al
+        const currentLang = localStorage.getItem('megabreCompareLang') || (navigator.language || navigator.userLanguage).substring(0, 2).toLowerCase();
+        if (currentLang === 'tr') {
+            toggleText.textContent = 'Editörü Aç';
+        } else if (currentLang === 'es') {
+            toggleText.textContent = 'Abrir Editor';
+        } else {
+            toggleText.textContent = 'Open Editor';
+        }
+        
+        toggleBtn.classList.remove('btn-warning');
+        toggleBtn.classList.add('btn-info');
     }
 }
+
+// Editör toggle butonları için event listener
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.toggle-editor').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-target');
+            toggleEditor(targetId);
+        });
+    });
+});
 
 let originalResult1 = ''; // Orijinal metni saklamak için
 let originalResult2 = '';
